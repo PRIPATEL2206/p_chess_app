@@ -369,7 +369,8 @@ class ChessBordControler extends GetxController {
             _joinedPlayerAs != _currentPlayingPlayer)) {
       print(_winner);
       print(_fireBaseBoardCollectionId);
-      print(_joinedPlayerAs != _currentPlayingPlayer);
+      print(_joinedPlayerAs);
+      print(_currentPlayingPlayer);
       print("game is finised");
       return;
     }
