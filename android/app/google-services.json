@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "143134033955",
+    "project_id": "p-chess",
+    "storage_bucket": "p-chess.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:143134033955:android:b57a02eff26b6faac30996",
+        "android_client_info": {
+          "package_name": "tech.princepatel2206.pchess"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "143134033955-jcl4k1c5prm0ah97pe3dtjrkn0vrbs75.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAWVMURT0BVYGhpl-SkIYW5jdbCvLyvgB4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "143134033955-jcl4k1c5prm0ah97pe3dtjrkn0vrbs75.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
