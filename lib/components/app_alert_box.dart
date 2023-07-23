@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pchess/components/app_text.dart';
 
-Future<bool> showAppAlertBox(
+Future<bool?> showAppAlertBox(
   BuildContext context, {
   double height = 80,
   required String alertText,
@@ -12,7 +12,7 @@ Future<bool> showAppAlertBox(
   BorderRadius? borderRadius,
   Color? bgColor,
 }) async {
-  bool ans = false;
+  bool? ans;
 
   await showDialog(
     context: context,
@@ -20,7 +20,7 @@ Future<bool> showAppAlertBox(
       return Center(
         child: SizedBox(
           height: height,
-          width: 200,
+          width: 300,
           child: Material(
             color: bgColor,
             child: Padding(
@@ -38,7 +38,7 @@ Future<bool> showAppAlertBox(
                     ),
                     child: image != null
                         ? Image(
-                            height: 50,
+                            height: 100,
                             image: image,
                           )
                         : const Icon(
@@ -49,31 +49,51 @@ Future<bool> showAppAlertBox(
                   height: 5,
                 ),
                 AppText(
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
                   text: alertText,
                 ),
                 const SizedBox(
-                  height: 7,
+                  height: 20,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    ElevatedButton(
+                dissagreeText != null
+                    ? ElevatedButton(
                         onPressed: () {
                           Navigator.of(context).pop();
                         },
+                        style: ButtonStyle(
+                            shape: MaterialStatePropertyAll(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(25))),
+                            padding: const MaterialStatePropertyAll<EdgeInsets>(
+                                EdgeInsets.symmetric(
+                                    horizontal: 100, vertical: 15))),
                         child: AppText(
-                          text: dissagreeText ?? "Cancel",
-                        )),
-                    ElevatedButton(
+                          text: dissagreeText,
+                          fontSize: 20,
+                        ))
+                    : Container(),
+                const SizedBox(
+                  height: 15,
+                ),
+                agreeText != null
+                    ? ElevatedButton(
                         onPressed: () {
                           ans = true;
                           Navigator.of(context).pop();
                         },
+                        style: ButtonStyle(
+                            shape: MaterialStatePropertyAll(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(25))),
+                            padding: const MaterialStatePropertyAll<EdgeInsets>(
+                                EdgeInsets.symmetric(
+                                    horizontal: 60, vertical: 15))),
                         child: AppText(
-                          text: agreeText ?? "Ok",
-                        )),
-                  ],
-                )
+                          text: agreeText,
+                          fontSize: 20,
+                        ))
+                    : Container()
               ]),
             ),
           ),

@@ -19,7 +19,7 @@ class JoinOnlineChessScreen extends StatelessWidget {
       )),
       body: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
         Container(
-          margin: EdgeInsets.symmetric(horizontal: 20),
+          margin: const EdgeInsets.symmetric(horizontal: 20),
           child: TextField(
             onChanged: (value) => selectedChessBoardId = value,
             decoration: InputDecoration(
@@ -55,7 +55,10 @@ class JoinOnlineChessScreen extends StatelessWidget {
               });
             },
             child: isLoding.value
-                ? const CircularProgressIndicator()
+                ? const CircularProgressIndicator(
+                    color: Colors.white,
+                    valueColor: AlwaysStoppedAnimation(Colors.black),
+                  )
                 : const AppText(
                     text: "Join & Play ",
                     fontSize: 25,

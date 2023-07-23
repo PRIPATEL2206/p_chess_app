@@ -6,6 +6,7 @@ import 'package:pchess/components/app_alert_box.dart';
 import 'package:pchess/components/chess_element_input_box.dart';
 import 'package:pchess/constants/element_constants.dart';
 import 'package:pchess/constants/firebase_firestore_key.dart';
+import 'package:pchess/helper/route_helper.dart';
 import 'package:pchess/models/chess_box_propertis.dart';
 
 class ChessBordControler extends GetxController {
@@ -19,6 +20,7 @@ class ChessBordControler extends GetxController {
   String? _fireBaseBoardCollectionId;
 
   Rx<bool> get startOnlineChess => _startOnlineChess;
+  bool get isDarkPlayerJoined => _joinedPlayerAs == ElementType.dark;
   List<List<Rx<ChessBoxProperties>>> get chessBoard => _chessBord;
 
   void initateChessBord({bool changeValue = false}) {
@@ -160,6 +162,13 @@ class ChessBordControler extends GetxController {
     _selectedElement[1] = -1;
     _isElementSelected = false;
     _currentPlayingPlayer = ElementType.light;
+    _winner = null;
+    _joinedPlayerAs = null;
+    _startOnlineChess.value = false;
+    if (_fireBaseBoardCollectionId != null) {
+      _getChessBoardCollection(_fireBaseBoardCollectionId!).delete();
+    }
+    _fireBaseBoardCollectionId = null;
   }
 
   bool _isInBord(int pos) {
@@ -200,7 +209,6 @@ class ChessBordControler extends GetxController {
   }
 
   void _changeCurrentPlayer() {
-    print("changing palyer");
     _currentPlayingPlayer = _currentPlayingPlayer == ElementType.light
         ? ElementType.dark
         : ElementType.light;
@@ -295,10 +303,11 @@ class ChessBordControler extends GetxController {
                   data[FireBaseFireStoreKeyString.darkPlayerExistKey];
         }
         _currentPlayingPlayer = elementTypeFromString(
-            data[FireBaseFireStoreKeyString.currentPlayerKey]);
+                data[FireBaseFireStoreKeyString.currentPlayerKey]) ??
+            _currentPlayingPlayer;
         if (data[FireBaseFireStoreKeyString.isGameFinisedKey]) {
           _setWinner(
-            elementTypeFromString(data[FireBaseFireStoreKeyString.winnerKey]),
+            elementTypeFromString(data[FireBaseFireStoreKeyString.winnerKey])!,
           );
         }
 
@@ -342,15 +351,18 @@ class ChessBordControler extends GetxController {
     final isPlayAgain = await showAppAlertBox(
       Get.context!,
       alertText: winner == ElementType.light ? "Light Wins" : "Dark Wins",
-      agreeText: "Play Again",
+      agreeText: "Play Again Offline",
       dissagreeText: "Go Back",
-      height: 200,
-      image: const AssetImage(ChessElementsIcons.lightKing),
+      height: 330,
+      image: AssetImage(winner == ElementType.light
+          ? ChessElementsIcons.lightKing
+          : ChessElementsIcons.darkKing),
     );
-    if (isPlayAgain) {
+    if (isPlayAgain == true) {
       initateChessBord(changeValue: true);
-    } else {
-      print("go back");
+    } else if (isPlayAgain == false) {
+      initateChessBord(changeValue: true);
+      goBack(Get.context!);
     }
   }
 
@@ -367,11 +379,6 @@ class ChessBordControler extends GetxController {
     if (_winner != null ||
         (_fireBaseBoardCollectionId != null &&
             _joinedPlayerAs != _currentPlayingPlayer)) {
-      print(_winner);
-      print(_fireBaseBoardCollectionId);
-      print(_joinedPlayerAs);
-      print(_currentPlayingPlayer);
-      print("game is finised");
       return;
     }
 
@@ -391,6 +398,7 @@ class ChessBordControler extends GetxController {
       if (_fireBaseBoardCollectionId != null) {
         _updateBoardOnline(_fireBaseBoardCollectionId!);
       }
+      _clearSelections();
       _changeCurrentPlayer();
       // wining condition check
       if (element.element == ChessElements.darkKing ||
@@ -416,12 +424,11 @@ class ChessBordControler extends GetxController {
           _updateBoardOnline(_fireBaseBoardCollectionId!);
         }
       }
-      _clearSelections();
+
       // show actions
     }
     // go there
     else if (_isElementSelected && element.isInSelectedPath) {
-      print("go");
       final selectedNode =
           _chessBord[_selectedElement[0]][_selectedElement[1]].value;
       _chessBord[row][col].value = selectedNode;
@@ -450,7 +457,6 @@ class ChessBordControler extends GetxController {
     // select
     else if (element.hasElement &&
         element.elementType == _currentPlayingPlayer) {
-      print("select");
       _clearSelections();
       _isElementSelected = true;
       _selectedElement[0] = row;
@@ -481,7 +487,6 @@ class ChessBordControler extends GetxController {
         default:
       }
     } else {
-      print("null");
       _clearSelections();
     }
   }

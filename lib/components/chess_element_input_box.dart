@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pchess/components/app_text.dart';
 import 'package:pchess/constants/element_constants.dart';
+import 'package:pchess/helper/route_helper.dart';
 
 Future<ChessElements> showChessElementSelectore(
     {required BuildContext context,
     required ElementType elementType,
     Color? bgColor}) async {
-  final Rx<ChessElements?> selectedElement = null.obs;
   final posibleOptions = elementType == ElementType.dark
       ? [
           ChessElementsIcons.darkCamel,
@@ -21,6 +21,9 @@ Future<ChessElements> showChessElementSelectore(
           ChessElementsIcons.lightElephent,
           ChessElementsIcons.lightQueen,
         ];
+  final Rx<ChessElements> selectedElement = elementType == ElementType.dark
+      ? ChessElements.darkCamel.obs
+      : ChessElements.lightCamel.obs;
 
   await showDialog(
     barrierDismissible: false,
@@ -28,7 +31,7 @@ Future<ChessElements> showChessElementSelectore(
     builder: (dilogContext) {
       return Center(
         child: SizedBox(
-          height: 330,
+          height: 360,
           width: 300,
           child: Material(
             color: bgColor,
@@ -38,35 +41,41 @@ Future<ChessElements> showChessElementSelectore(
                 const SizedBox(
                   height: 3,
                 ),
-                Row(
-                  children: [
-                    for (var option in posibleOptions)
-                      InkWell(
-                        onTap: () {
-                          selectedElement.value =
-                              ChessElementsIcons.elementOfIcon(option);
-                        },
-                        child: Container(
-                          width: 60,
-                          height: 60,
-                          padding: const EdgeInsets.all(.3),
-                          decoration: BoxDecoration(
-                              border: (selectedElement.value != null &&
-                                      option ==
+                Expanded(
+                  child: GridView.count(
+                    crossAxisCount: 2,
+                    children: [
+                      for (var option in posibleOptions)
+                        InkWell(
+                            onTap: () {
+                              selectedElement.value =
+                                  ChessElementsIcons.elementOfIcon(option);
+                            },
+                            child: Obx(
+                              () => Container(
+                                decoration: BoxDecoration(
+                                  border: option ==
                                           ChessElementsIcons.iconOfElement(
-                                              selectedElement.value!))
-                                  ? Border.all(
-                                      width: 1,
-                                      color: Colors.teal,
-                                    )
-                                  : null,
-                              borderRadius: BorderRadius.circular(5),
-                              image:
-                                  DecorationImage(image: AssetImage(option))),
-                          margin: const EdgeInsets.all(6),
-                        ),
-                      )
-                  ],
+                                              selectedElement.value)
+                                      ? Border.all(
+                                          width: 3,
+                                          color: Colors.teal,
+                                        )
+                                      : null,
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                child: Container(
+                                  width: 60,
+                                  height: 60,
+                                  margin: const EdgeInsets.all(6),
+                                  decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                          image: AssetImage(option))),
+                                ),
+                              ),
+                            )),
+                    ],
+                  ),
                 ),
                 const SizedBox(
                   height: 5,
@@ -76,11 +85,19 @@ Future<ChessElements> showChessElementSelectore(
                   children: [
                     ElevatedButton(
                         onPressed: () {
-                          if (selectedElement.value != null) {
-                            Navigator.of(dilogContext).pop();
-                          }
+                          goBack(context);
                         },
-                        child: const AppText(text: "Select"))
+                        style: ButtonStyle(
+                            shape: MaterialStatePropertyAll(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(25))),
+                            padding: const MaterialStatePropertyAll<EdgeInsets>(
+                                EdgeInsets.symmetric(
+                                    horizontal: 100, vertical: 15))),
+                        child: const AppText(
+                          text: "Select",
+                          fontSize: 20,
+                        ))
                   ],
                 )
               ]),
@@ -91,5 +108,5 @@ Future<ChessElements> showChessElementSelectore(
     },
   );
 
-  return selectedElement.value!;
+  return selectedElement.value;
 }

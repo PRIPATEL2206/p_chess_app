@@ -29,16 +29,20 @@ class PlayerSelectionScreen extends StatelessWidget {
                 },
                 child: Obx(
                   () => Container(
-                    height: 100,
-                    width: 100,
-                    padding: const EdgeInsets.all(5),
                     decoration: BoxDecoration(
                       border: selectedElement.value == ElementType.light
                           ? Border.all(width: 3, color: Colors.teal)
                           : null,
-                      image: const DecorationImage(
-                          image: AssetImage(ChessElementsIcons.lightKing)),
                       borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: Container(
+                      height: 100,
+                      width: 100,
+                      margin: const EdgeInsets.all(5),
+                      decoration: const BoxDecoration(
+                        image: DecorationImage(
+                            image: AssetImage(ChessElementsIcons.lightKing)),
+                      ),
                     ),
                   ),
                 )),
@@ -48,15 +52,20 @@ class PlayerSelectionScreen extends StatelessWidget {
                 },
                 child: Obx(
                   () => Container(
-                    height: 100,
-                    width: 100,
                     decoration: BoxDecoration(
                       border: selectedElement.value == ElementType.dark
                           ? Border.all(width: 3, color: Colors.teal)
                           : null,
-                      image: const DecorationImage(
-                          image: AssetImage(ChessElementsIcons.darkKing)),
                       borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: Container(
+                      height: 100,
+                      width: 100,
+                      margin: const EdgeInsets.all(5),
+                      decoration: const BoxDecoration(
+                        image: DecorationImage(
+                            image: AssetImage(ChessElementsIcons.darkKing)),
+                      ),
                     ),
                   ),
                 )),
@@ -65,7 +74,8 @@ class PlayerSelectionScreen extends StatelessWidget {
         const SizedBox(
           height: 30,
         ),
-        Obx(() => ElevatedButton(
+        Obx(
+          () => ElevatedButton(
             style: ButtonStyle(
                 shape: MaterialStatePropertyAll(RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30))),
@@ -85,11 +95,15 @@ class PlayerSelectionScreen extends StatelessWidget {
               });
             },
             child: isLoding.value
-                ? const CircularProgressIndicator()
+                ? const CircularProgressIndicator(
+                    color: Colors.white,
+                  )
                 : const AppText(
                     fontSize: 30,
                     text: "Play",
-                  )))
+                  ),
+          ),
+        ),
       ]),
     );
   }

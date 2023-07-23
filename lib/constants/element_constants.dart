@@ -78,19 +78,20 @@ class ChessElementsIcons {
   }
 }
 
-ChessElements chessElementFromString(String element) {
+ChessElements? chessElementFromString(String? element) {
   for (var chessElement in ChessElements.values) {
     if (chessElement.toString() == element) return chessElement;
   }
-
-  return ChessElements.darkSoldure;
+  return null;
 }
 
-ElementType elementTypeFromString(String type) {
+ElementType? elementTypeFromString(String? type) {
   if (ElementType.dark.toString() == type) {
     return ElementType.dark;
+  } else if (ElementType.light.toString() == type) {
+    return ElementType.light;
   }
-  return ElementType.dark;
+  return null;
 }
 
 enum ElementType { dark, light }

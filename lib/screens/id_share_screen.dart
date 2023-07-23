@@ -15,6 +15,7 @@ class IdSharingScreen extends StatelessWidget {
     Get.find<ChessBordControler>().startOnlineChess.listen(
       (e) {
         if (e) {
+          Get.snackbar("Player Joied", "Starting Game .....");
           replaceScreen(context: context, screen: const ChessGameScreen());
         }
       },
